@@ -22,12 +22,18 @@ client.connect().then(()=>{console.log('client connection')})
 let app = express()
 
 //get
-app.get('/', (req, res)=>{
-	client.query('SELECT * FROM Songs')
+app.get('/songs/:id', (req, res)=>{
+	let songId = req.params.id
+
+	let text ='SELECT * FROM Songs WHERE song_id = $1'
+	let values = [songId]
+
+
+	client.query(text, values)
 	.then(result => {
-		res.send(result)
+		res.send(result.rows)
 	})
-	.catch(error => console.log(error))
+	.catch(error => response.send(error))
 
 })
 
